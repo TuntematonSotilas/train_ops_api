@@ -1,6 +1,9 @@
-use actix_web::{web, App, HttpServer};
+use actix_web::{middleware::Logger, web, App, HttpServer};
 use actix_web_httpauth::middleware::HttpAuthentication;
 use mongodb::Client;
+use load_dotenv::load_dotenv;
+use tracing::level_filters::LevelFilter;
+use tracing_subscriber::EnvFilter;
 
 mod models;
 mod auth;
@@ -12,22 +15,25 @@ use routes::login::login;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     
-    let uri = "mongodb+srv://todo";
+    tracing_subscriber::fmt()
+        .with_env_filter(
+            EnvFilter::builder()
+                .with_default_directive(LevelFilter::INFO.into())
+                .from_env_lossy(),
+        )
+        .without_time()
+        .init();
 
+    load_dotenv!();
+    let uri = env!("DATABASE_URL");
     let client = Client::with_uri_str(uri).await.expect("failed to connect");
-
-    /*let mut client_options = 
-        ClientOptions::parse(uri)
-        .await.unwrap();
-    let server_api = ServerApi::builder().version(ServerApiVersion::V).build();
-    client_options.server_api = Some(server_api);
-    let client = Client::with_options(client_options).unwrap();*/
 
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(client.clone()))
             .service(login)
             .wrap(HttpAuthentication::with_fn(validator))
+            .wrap(Logger::default().log_target("@"))
     })
     .bind(("127.0.0.1", 8080))?
     .run()

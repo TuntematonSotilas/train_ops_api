@@ -8,3 +8,8 @@ actix-web = "4"
 actix-web-httpauth = "0.8.2"
 mongodb = "3.1.0"
 serde = "1.0.210"
+load-dotenv = "0.1.2"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing = "0.1.30"
+log = "0.4.6"
+sha256 = "1.5.0"
