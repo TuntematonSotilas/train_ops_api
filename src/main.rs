@@ -9,6 +9,8 @@ mod models;
 mod auth;
 mod routes;
 
+const DB_NAME: &str = "TrainOps";
+
 use auth::auth_validator::validator;
 use routes::login::login;
 

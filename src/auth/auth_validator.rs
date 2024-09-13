@@ -1,18 +1,15 @@
 use actix_web::{dev::ServiceRequest, error, web, Error};
 use actix_web_httpauth::extractors::basic::BasicAuth;
-use load_dotenv::load_dotenv;
 use mongodb::{bson::doc, Client, Collection};
 
-use crate::models::user::User;
+use crate::{models::user::User, DB_NAME};
 
-const DB_NAME: &str = "TrainOps";
 const COLL_NAME: &str = "users";
 
 pub async fn validator(
     req: ServiceRequest,
     creds: BasicAuth) -> Result<ServiceRequest, (Error, ServiceRequest)> {
     
-    load_dotenv!();
     let password = creds.password().unwrap_or_default();
     let pass_hash = sha256::digest(password);
     
