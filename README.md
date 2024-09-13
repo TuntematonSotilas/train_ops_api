@@ -27,6 +27,6 @@ Test : http://localhost:8080/login
 
 ## Docker
 
-1. Build : `docker build -t trainopsapi .` 
-1. Run : `docker run -it —rm —name trainopsapi-instance trainopsapi`
+1. Build : `docker build -t train_ops_api .` 
+1. Run : `docker run -p 8080:8080 train_ops_api`
 1. Test : http://localhost:8080/login
