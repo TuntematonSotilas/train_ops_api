@@ -36,15 +36,15 @@ async fn main() -> std::io::Result<()> {
             .allow_any_origin()
             .allow_any_method()
             .allow_any_header()
+            .expose_any_header()
             .max_age(3600);
 
         App::new()
-            .app_data(web::Data::new(client.clone()))
+            .wrap(Logger::default().log_target("@"))
             .wrap(cors)
             .wrap(HttpAuthentication::with_fn(validator))
-            .service(ping)
-            //.wrap(HttpAuthentication::with_fn(validator))
-            .wrap(Logger::default().log_target("@"))
+            .app_data(web::Data::new(client.clone()))
+            .service(login)
     })
     .bind(("0.0.0.0", 8080))?
     .run()
