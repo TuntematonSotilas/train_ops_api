@@ -35,12 +35,13 @@ async fn main() -> std::io::Result<()> {
         let cors = Cors::default()
             .allow_any_origin()
             .allow_any_method()
-            .allow_any_header();
+            .allow_any_header()
+            .send_wildcard();
 
         App::new()
             .app_data(web::Data::new(client.clone()))
-            .service(login)
             .wrap(cors)
+            .service(login)
             .wrap(HttpAuthentication::with_fn(validator))
             .wrap(Logger::default().log_target("@"))
     })
