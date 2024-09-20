@@ -33,11 +33,9 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         let cors = Cors::default()
-            .allow_any_origin()
+            .allowed_origin("http://localhost:1420")
             .allow_any_method()
             .allow_any_header()
-            .expose_any_header()
-            .send_wildcard()
             .max_age(3600);
 
         App::new()
