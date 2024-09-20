@@ -41,6 +41,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(web::Data::new(client.clone()))
             .wrap(cors)
+            .wrap(HttpAuthentication::with_fn(validator))
             .service(ping)
             //.wrap(HttpAuthentication::with_fn(validator))
             .wrap(Logger::default().log_target("@"))
