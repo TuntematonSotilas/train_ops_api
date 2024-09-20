@@ -32,7 +32,10 @@ async fn main() -> std::io::Result<()> {
     let client = Client::with_uri_str(uri).await.expect("failed to connect");
 
     HttpServer::new(move || {
-        let cors = Cors::default().supports_credentials();
+        let cors = Cors::default()
+            .allow_any_origin()
+            .allow_any_method()
+            .allow_any_header();
 
         App::new()
             .app_data(web::Data::new(client.clone()))
