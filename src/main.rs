@@ -13,7 +13,7 @@ mod routes;
 const DB_NAME: &str = "TrainOps";
 
 use auth::auth_validator::validator;
-use routes::login::login;
+use routes::login::{login, ping};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -33,7 +33,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         let cors = Cors::default()
-            .allowed_origin("http://localhost:1420")
+            .allow_any_origin()
             .allow_any_method()
             .allow_any_header()
             .max_age(3600);
@@ -41,8 +41,8 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(web::Data::new(client.clone()))
             .wrap(cors)
-            .service(login)
-            .wrap(HttpAuthentication::with_fn(validator))
+            .service(ping)
+            //.wrap(HttpAuthentication::with_fn(validator))
             .wrap(Logger::default().log_target("@"))
     })
     .bind(("0.0.0.0", 8080))?
