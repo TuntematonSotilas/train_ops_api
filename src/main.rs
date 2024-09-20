@@ -1,3 +1,4 @@
+use actix_cors::Cors;
 use actix_web::{middleware::Logger, web, App, HttpServer};
 use actix_web_httpauth::middleware::HttpAuthentication;
 use mongodb::Client;
@@ -31,9 +32,12 @@ async fn main() -> std::io::Result<()> {
     let client = Client::with_uri_str(uri).await.expect("failed to connect");
 
     HttpServer::new(move || {
+        let cors = Cors::default().supports_credentials();
+
         App::new()
             .app_data(web::Data::new(client.clone()))
             .service(login)
+            .wrap(cors)
             .wrap(HttpAuthentication::with_fn(validator))
             .wrap(Logger::default().log_target("@"))
     })
