@@ -1,4 +1,4 @@
-use actix_web::{get, post, web, Responder, Result};
+use actix_web::{post, web, Responder, Result};
 use actix_web_httpauth::extractors::basic::BasicAuth;
 use mongodb::{bson::doc, Client, Collection};
 
@@ -19,10 +19,3 @@ pub async fn login(creds: BasicAuth, client: web::Data<Client>) -> Result<impl R
 
     Ok(web::Json(user))
 }
-
-#[get("/ping")]
-pub async fn ping() -> Result<impl Responder> {
-    Ok("pong")
-}
-
-
